@@ -40,7 +40,7 @@ def enter_data():
     return render_template('enter_data.html')
 
 # Страница таблицы учёта
-@app.route('/')
+@app.route('/accounting')
 def accounting():
     records = r.lrange('accounting', 0, -1)
     return render_template('accounting.html', records=records)
