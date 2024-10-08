@@ -1,0 +1,26 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "5006:5000"
+    depends_on:
+      - redis
+    networks:
+      default:
+        ipv4_address: 172.18.2.194
+
+  redis:
+    image: "redis:alpine"
+    command: redis-server --save 900 1
+    ports:
+      - "6379:6379"
+    networks:
+      default:
+        ipv4_address: 172.18.2.195
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.18.2.192/29
+          gateway: 172.18.2.193

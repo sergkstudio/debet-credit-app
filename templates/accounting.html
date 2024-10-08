@@ -1,0 +1,17 @@
+<h2>Таблица учёта</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Дебет</th>
+            <th>Кредит</th>
+            <th>Комментарий</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            <td>{{ record.decode() }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,11 @@
+<h2>Заработная плата</h2>
+<form method="POST">
+    <input type="text" name="company" placeholder="Предприятие" required>
+    <input type="number" name="salary" placeholder="Заработная плата" required>
+    <button type="submit">Добавить</button>
+</form>
+<ul>
+{% for company, salary in salaries.items() %}
+    <li>{{ company.decode() }}: {{ salary.decode() }} руб.</li>
+{% endfor %}
+</ul>
