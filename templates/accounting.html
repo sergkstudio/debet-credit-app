@@ -1,47 +1,78 @@
-<h2>Таблица учёта</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Дебет</th>
-            <th>Кредит</th>
-            <th>Комментарий</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for record in records %}
-        <tr>
-            <td>{{ record.decode() }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<style>
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        text-align: center;
-        text-decoration: none;
-        outline: none;
-        color: #fff;
-        background-color: #4CAF50;
-        border: none;
-        border-radius: 5px;
-        box-shadow: 0 4px #999;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accounting</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    .button:hover {background-color: #3e8e41}
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
 
-    .button:active {
-        background-color: #3e8e41;
-        box-shadow: 0 2px #666;
-        transform: translateY(2px);
-    }
-</style>
+        th {
+            background-color: #f2f2f2;
+        }
 
-<div>
-    <a href="/salary" class="button">Salary</a>
-    <a href="/expenses" class="button">Expenses</a>
-    <a href="/enter_data" class="button">Enter Data</a>
-</div>
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 4px #999;
+            margin-right: 10px;
+        }
+
+        .button:hover {background-color: #3e8e41}
+
+        .button:active {
+            background-color: #3e8e41;
+            box-shadow: 0 2px #666;
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+<body>
+    <h1>Accounting</h1>
+
+    <!-- Кнопки для перехода на другие страницы -->
+    <div>
+        <a href="/salary" class="button">Salary</a>
+        <a href="/expenses" class="button">Expenses</a>
+        <a href="/enter_data" class="button">Enter Data</a>
+    </div>
+
+    <!-- Таблица с записями расходов -->
+    <table>
+        <thead>
+            <tr>
+                <th>Сумма</th>
+                <th>Описание</th>
+                <th>Месяц</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.amount }}</td>
+                <td>{{ record.description }}</td>
+                <td>{{ record.month }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
