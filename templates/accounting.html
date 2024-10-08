@@ -13,5 +13,35 @@
             <td>{{ record.decode() }}</td>
         </tr>
         {% endfor %}
+        <style>
+            .button {
+                display: inline-block;
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                outline: none;
+                color: #fff;
+                background-color: #4CAF50;
+                border: none;
+                border-radius: 5px;
+                box-shadow: 0 4px #999;
+            }
+        
+            .button:hover {background-color: #3e8e41}
+        
+            .button:active {
+                background-color: #3e8e41;
+                box-shadow: 0 2px #666;
+                transform: translateY(2px);
+            }
+        </style>
+        
+        <div>
+            <a href="/salary" class="button">Salary</a>
+            <a href="/expenses" class="button">Expenses</a>
+            <a href="/enter_data" class="button">Enter Data</a>
+        </div>
     </tbody>
 </table>
