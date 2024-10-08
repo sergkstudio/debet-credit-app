@@ -5,19 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accounting</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .left-column {
+            width: 65%;
+        }
+
+        .right-column {
+            width: 30%;
+            padding-left: 20px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
 
         th, td {
-            border: 1px solid black;
-            padding: 10px;
+            border: 1px solid #ddd;
+            padding: 8px;
             text-align: left;
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #f4f4f4;
         }
 
         .button {
@@ -33,7 +53,7 @@
             border: none;
             border-radius: 5px;
             box-shadow: 0 4px #999;
-            margin-right: 10px;
+            margin-top: 10px;
         }
 
         .button:hover {background-color: #3e8e41}
@@ -43,36 +63,197 @@
             box-shadow: 0 2px #666;
             transform: translateY(2px);
         }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .operation-list, .salary-list, .expense-list {
+            margin-top: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .operation-list li, .salary-list li, .expense-list li {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .operation-list li button, .salary-list li button, .expense-list li button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .operation-list li button:hover, .salary-list li button:hover, .expense-list li button:hover {
+            background-color: #d32f2f;
+        }
     </style>
 </head>
 <body>
-    <h1>Accounting</h1>
 
-    <!-- Кнопки для перехода на другие страницы -->
-    <div>
-        <a href="/salary" class="button">Salary</a>
-        <a href="/expenses" class="button">Expenses</a>
-        <a href="/enter_data" class="button">Enter Data</a>
+    <h1>Accounting</h1>
+    <div class="container">
+        <!-- Левая колонка (таблица) -->
+        <div class="left-column">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Дебет</th>
+                        <th>Кредит</th>
+                        <th>Комментарий</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Пример данных -->
+                    <tr>
+                        <td>01/10/2024</td>
+                        <td>1000</td>
+                        <td>-</td>
+                        <td>Зарплата</td>
+                    </tr>
+                    <tr>
+                        <td>01/10/2024</td>
+                        <td>-</td>
+                        <td>200</td>
+                        <td>Обязательные расходы</td>
+                    </tr>
+                    <tr>
+                        <td>02/10/2024</td>
+                        <td>500</td>
+                        <td>-</td>
+                        <td>Приход</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Правая колонка (добавление операции, зарплаты, расходов) -->
+        <div class="right-column">
+            <!-- Добавить операцию -->
+            <div>
+                <h3>Добавить операцию</h3>
+                <div class="form-group">
+                    <label for="amount">Сумма</label>
+                    <input type="number" id="amount" placeholder="Введите сумму">
+                </div>
+                <div class="form-group">
+                    <label for="operation-type">Тип операции</label>
+                    <select id="operation-type">
+                        <option value="income">Приход</option>
+                        <option value="expense">Расход</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="operation-comment">Комментарий</label>
+                    <textarea id="operation-comment" placeholder="Введите комментарий"></textarea>
+                </div>
+                <button class="button" onclick="addOperation()">Добавить операцию</button>
+            </div>
+
+            <!-- Список зарплат -->
+            <div>
+                <h3>Заработная плата</h3>
+                <ul class="salary-list">
+                    <li>
+                        <span>1000</span>
+                        <button onclick="deleteSalary()">Удалить</button>
+                        <button onclick="editSalary()">Изменить</button>
+                    </li>
+                    <li>
+                        <span>1500</span>
+                        <button onclick="deleteSalary()">Удалить</button>
+                        <button onclick="editSalary()">Изменить</button>
+                    </li>
+                </ul>
+                <div class="form-group">
+                    <label for="salary-amount">Сумма зарплаты</label>
+                    <input type="number" id="salary-amount" placeholder="Введите сумму зарплаты">
+                </div>
+                <div class="form-group">
+                    <label for="salary-comment">Комментарий</label>
+                    <textarea id="salary-comment" placeholder="Введите комментарий"></textarea>
+                </div>
+                <button class="button" onclick="addSalary()">Добавить зарплату</button>
+            </div>
+
+            <!-- Список обязательных расходов -->
+            <div>
+                <h3>Обязательные расходы</h3>
+                <ul class="expense-list">
+                    <li>
+                        <span>200</span>
+                        <button onclick="deleteExpense()">Удалить</button>
+                        <button onclick="editExpense()">Изменить</button>
+                    </li>
+                    <li>
+                        <span>300</span>
+                        <button onclick="deleteExpense()">Удалить</button>
+                        <button onclick="editExpense()">Изменить</button>
+                    </li>
+                </ul>
+                <div class="form-group">
+                    <label for="expense-amount">Сумма расхода</label>
+                    <input type="number" id="expense-amount" placeholder="Введите сумму расхода">
+                </div>
+                <div class="form-group">
+                    <label for="expense-comment">Комментарий</label>
+                    <textarea id="expense-comment" placeholder="Введите комментарий"></textarea>
+                </div>
+                <button class="button" onclick="addExpense()">Добавить расход</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Таблица с записями расходов -->
-    <table>
-        <thead>
-            <tr>
-                <th>Сумма</th>
-                <th>Описание</th>
-                <th>Месяц</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for record in records %}
-            <tr>
-                <td>{{ record.amount }}</td>
-                <td>{{ record.description }}</td>
-                <td>{{ record.month }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <script>
+        // Функции для обработки добавления, удаления и редактирования записей
+        function addOperation() {
+            const amount = document.getElementById('amount').value;
+            const type = document.getElementById('operation-type').value;
+            const comment = document.getElementById('operation-comment').value;
+            console.log(`Операция добавлена: ${amount}, ${type}, ${comment}`);
+        }
+
+        function addSalary() {
+            const amount = document.getElementById('salary-amount').value;
+            const comment = document.getElementById('salary-comment').value;
+            console.log(`Зарплата добавлена: ${amount}, ${comment}`);
+        }
+
+        function addExpense() {
+            const amount = document.getElementById('expense-amount').value;
+            const comment = document.getElementById('expense-comment').value;
+            console.log(`Обязательный расход добавлен: ${amount}, ${comment}`);
+        }
+
+        function deleteSalary() {
+            console.log('Зарплата удалена');
+        }
+
+        function deleteExpense() {
+            console.log('Обязательный расход удален');
+        }
+
+        function editSalary() {
+            console.log('Зарплата отредактирована');
+        }
+
+        function editExpense() {
+            console.log('Обязательный расход отредактирован');
+        }
+    </script>
+
 </body>
 </html>
