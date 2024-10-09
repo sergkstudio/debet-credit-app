@@ -119,8 +119,7 @@ def index():
     for row in salary_total:
         operations.append({
             'month': row['month'],
-            'debit': row['size'],
-            'credit': expense_total,
+            'credit': row['size'],
             'comment': row['comment']
         })
 
