@@ -19,7 +19,8 @@ def init_db():
         CREATE TABLE IF NOT EXISTS salary (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             size REAL NOT NULL,
-            comment TEXT
+            comment TEXT,
+            month TEXT NOT NULL
         )
     ''')
     
@@ -27,7 +28,8 @@ def init_db():
         CREATE TABLE IF NOT EXISTS obligatory_expenses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             size REAL NOT NULL,
-            comment TEXT
+            comment TEXT,
+            month TEXT NOT NULL
         )
     ''')
     
@@ -36,13 +38,14 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             size REAL NOT NULL,
             comment TEXT,
-            current_time TEXT NOT NULL
+            current_time TEXT NOT NULL,
+            month TEXT NOT NULL
         )
     ''')
     
     conn.close()
 
-with app.app_context():
+def before_first_request():
     init_db()
 
 # Главная страница с добавлением и удалением данных
@@ -55,14 +58,17 @@ def index():
         table = request.form['table']
         size = request.form['size']
         comment = request.form['comment']
-        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # Текущая дата и время
+        month = datetime.now().strftime('%Y-%m')  # Текущий месяц в формате YYYY-MM
+
         
         if table == 'salary':
-            conn.execute('INSERT INTO salary (size, comment) VALUES (?, ?)', (size, comment))
+            conn.execute('INSERT INTO salary (size, comment, month) VALUES (?, ?, ?)', (size, comment, month))
         elif table == 'obligatory_expenses':
-            conn.execute('INSERT INTO obligatory_expenses (size, comment) VALUES (?, ?)', (size, comment))
+            conn.execute('INSERT INTO obligatory_expenses (size, comment, month) VALUES (?, ?, ?)', (size, comment, month))
         elif table == 'income_expenses':
-            conn.execute('INSERT INTO income_expenses (size, comment, current_time) VALUES (?, ?, ?)', (size, comment, current_time))
+            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            conn.execute('INSERT INTO income_expenses (size, comment, current_time, month) VALUES (?, ?, ?, ?)', 
+                         (size, comment, current_time, month))
         
         conn.commit()
         conn.close()
@@ -84,13 +90,24 @@ def index():
         conn.close()
         return redirect(url_for('index'))
 
-    # Получение записей из всех таблиц
-    salary = conn.execute('SELECT * FROM salary').fetchall()
-    obligatory_expenses = conn.execute('SELECT * FROM obligatory_expenses').fetchall()
-    income_expenses = conn.execute('SELECT * FROM income_expenses').fetchall()
+    # Получение данных за каждый месяц
+    salary = conn.execute('SELECT * FROM salary ORDER BY month').fetchall()
+    obligatory_expenses = conn.execute('SELECT * FROM obligatory_expenses ORDER BY month').fetchall()
+    income_expenses = conn.execute('SELECT * FROM income_expenses ORDER BY month').fetchall()
+
+    # Группируем данные по месяцам
+    months = list(set([row['month'] for row in salary + obligatory_expenses + income_expenses]))
+    
+    month_data = {}
+    for month in months:
+        month_data[month] = {
+            'salary_total': sum(row['size'] for row in salary if row['month'] == month),
+            'expense_total': sum(row['size'] for row in obligatory_expenses if row['month'] == month),
+            'operations': [row for row in income_expenses if row['month'] == month]
+        }
+
     conn.close()
 
-    return render_template('index.html', salary=salary, obligatory_expenses=obligatory_expenses, income_expenses=income_expenses)
-
+    return render_template('index.html', month_data=month_data)
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

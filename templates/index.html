@@ -5,6 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Учет финансов</title>
 </head>
+<h1>Финансовые данные по месяцам</h1>
+    <table border="1">
+        <tr>
+            <th>Месяц</th>
+            <th>Дебет</th>
+            <th>Кредит</th>
+            <th>Комментарий</th>
+        </tr>
+        
+        {% for month, data in month_data.items() %}
+        <tr>
+            <td>{{ month }}</td>
+            <td>{{ data.salary_total }}</td>
+            <td>{{ data.expense_total }}</td>
+            <td>Обязательные расходы</td>
+        </tr>
+        
+        {% for operation in data.operations %}
+        <tr>
+            <td>{{ operation['current_time'] }}</td>
+            <td>{{ data.salary_total - data.expense_total }}</td>
+            <td>{{ operation['size'] }}</td>
+            <td>{{ operation['comment'] }}</td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+    </table>
 <h2>Добавить запись</h2>
 <form action="/" method="post">
     <label for="table">Выберите таблицу:</label>
