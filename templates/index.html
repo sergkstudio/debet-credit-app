@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дебет/Кредит</title>
+    <title>Учет доходов и расходов</title>
 </head>
 <body>
-    <h1>Добавить приход/расход</h1>
-    <form action="/new" method="post">
-        <select name="income_expenses" id="income_expenses">
+    <h1>Добавить новую запись</h1>
+    <form action="/" method="post">
+        <label for="table">Выберите таблицу:</label>
+        <select name="table" id="table">
+            <option value="salary">Заработная плата</option>
+            <option value="obligatory_expenses">Обязательные расходы</option>
+            <option value="income_expenses">Приход/расход</option>
         </select>
 
         <br><br>
@@ -25,5 +29,14 @@
 
         <button type="submit">Добавить</button>
     </form>
-</body>
-</html>
+
+    <h2>Заработная плата</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Размер</th>
+            <th>Комментарий</th>
+        </tr>
+        {% for row in salary %}
+        <tr>
+            <td>{{ row['id'] }}</td
