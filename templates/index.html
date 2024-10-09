@@ -24,12 +24,12 @@
         </tr>
         {% endfor %}
 
-        {% for expense, data in expense_data.item() %}
+        {% for data in expense_data.item() %}
         <tr>
-            <td>{{ current_time }}</td>
-            <td>{{ salary_total - credit }}</td>
-            <td>{{ credit }}</td>
-            <td>{{ comment }}</td>
+            <td>{{ data.current_time }}</td>
+            <td>{{ data.salary_total - data.credit }}</td>
+            <td>{{ data.credit }}</td>
+            <td>{{ data.comment }}</td>
             <td>
                 <form action="/" method="post" style="display:inline;">
                     <input type="hidden" name="delete_table" value="income_expenses">
