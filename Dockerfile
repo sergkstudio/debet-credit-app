@@ -6,7 +6,7 @@ WORKDIR /app
 RUN pip install flask
 
 # Копируем исходный код
-COPY app.py /app/app.py
+COPY . .
 
 # Запуск приложения
 CMD ["python", "app.py"]
