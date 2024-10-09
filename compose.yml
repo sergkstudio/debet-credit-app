@@ -5,7 +5,7 @@ services:
     ports:
       - "5006:5000"
     volumes:
-      - ./app:/app
+      - ./:/app
     networks:
       default:
         ipv4_address: 172.18.2.194
