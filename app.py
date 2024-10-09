@@ -22,8 +22,8 @@ def init_db():
     conn.execute('CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, content TEXT NOT NULL)')
     conn.close()
 
-@app.before_first_request
-def before_first_request():
+# Инициализация БД при старте приложения
+with app.app_context():
     init_db()
 
 # Главная страница
