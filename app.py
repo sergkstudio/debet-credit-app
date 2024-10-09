@@ -30,8 +30,6 @@ with app.app_context():
 @app.route('/')
 def index():
     conn = get_db_connection()
-    conn.execute('INSERT INTO posts (title, content) VALUES ("Why I love Flask", "This is so cool!!!")')
-    conn.execute('INSERT INTO posts (title, content) VALUES ("Cats >> Dogs", "It was a joke because they are all so adorable.")')
     posts = conn.execute('SELECT * FROM posts').fetchall()
     conn.close()
     return render_template('index.html', posts=posts)
