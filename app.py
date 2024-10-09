@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -53,13 +54,15 @@ def index():
         table = request.form['table']
         size = request.form['size']
         comment = request.form['comment']
+        month = datetime.now().strftime('%m-%Y')  # Текущий месяц
         
         if table == 'salary':
-            conn.execute('INSERT INTO salary (size, comment) VALUES (?, ?)', (size, comment))
+            conn.execute('INSERT INTO salary (size, comment, month) VALUES (?, ?, ?)', (size, comment, month))
         elif table == 'obligatory_expenses':
-            conn.execute('INSERT INTO obligatory_expenses (size, comment) VALUES (?, ?)', (size, comment))
+            conn.execute('INSERT INTO obligatory_expenses (size, comment, month) VALUES (?, ?, ?)', (size, comment, month))
         elif table == 'income_expenses':
-            conn.execute('INSERT INTO income_expenses (size, comment) VALUES (?, ?)', (size, comment))
+            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            conn.execute('INSERT INTO income_expenses (size, comment, current_time, month) VALUES (?, ?, ?, ?)', (size, comment, current_time, month))
         
         conn.commit()
         conn.close()
@@ -85,9 +88,26 @@ def index():
     salary = conn.execute('SELECT * FROM salary').fetchall()
     obligatory_expenses = conn.execute('SELECT * FROM obligatory_expenses').fetchall()
     income_expenses = conn.execute('SELECT * FROM income_expenses').fetchall()
+
+    # Получение данных за каждый месяц
+    salary_month = conn.execute('SELECT * FROM salary ORDER BY month').fetchall()
+    obligatory_expenses_month = conn.execute('SELECT * FROM obligatory_expenses ORDER BY month').fetchall()
+    income_expenses_month = conn.execute('SELECT * FROM income_expenses ORDER BY month').fetchall()
+
+    # Группируем данные по месяцам
+    months = list(set([row['month'] for row in salary_month + obligatory_expenses_month + income_expenses_month]))
+    
+    month_data = {}
+    for month in months:
+        month_data[month] = {
+            'salary_total': sum(row['size'] for row in salary),
+            'expense_total': sum(row['size'] for row in obligatory_expenses if row['month'] == month),
+            'operations': [row for row in income_expenses if row['month'] == month]
+        }
+
     conn.close()
 
-    return render_template('index.html', salary=salary, obligatory_expenses=obligatory_expenses, income_expenses=income_expenses)
+    return render_template('index.html', salary=salary, obligatory_expenses=obligatory_expenses, income_expenses=income_expenses, month_data=month_data)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
