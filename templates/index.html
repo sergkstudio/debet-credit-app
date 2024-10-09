@@ -39,4 +39,43 @@
         </tr>
         {% for row in salary %}
         <tr>
-            <td>{{ row['id'] }}</td
+            <td>{{ row['id'] }}</td>
+            <td>{{ row['size'] }}</td>
+            <td>{{ row['comment'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Обязательные расходы</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Размер</th>
+            <th>Комментарий</th>
+        </tr>
+        {% for row in obligatory_expenses %}
+        <tr>
+            <td>{{ row['id'] }}</td>
+            <td>{{ row['size'] }}</td>
+            <td>{{ row['comment'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Приход/расход</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Размер</th>
+            <th>Комментарий</th>
+        </tr>
+        {% for row in income_expenses %}
+        <tr>
+            <td>{{ row['id'] }}</td>
+            <td>{{ row['size'] }}</td>
+            <td>{{ row['comment'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
