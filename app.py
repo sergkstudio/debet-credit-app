@@ -101,7 +101,7 @@ def index():
     month_data = {}
     for month in months:
         month_data[month] = {
-            'salary_total': sum(row['size'] for row in salary),
+            'salary_total': sum(float(row['size']) for row in salary),
             'expense_total': sum(row['size'] for row in obligatory_expenses if row['month'] == month),
             'operations': [row for row in income_expenses if row['month'] == month]
         }
