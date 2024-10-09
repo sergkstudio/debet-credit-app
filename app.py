@@ -19,7 +19,8 @@ def init_db():
         CREATE TABLE IF NOT EXISTS salary (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             size REAL NOT NULL,
-            comment TEXT
+            comment TEXT,
+            month TEXT NOT NULL
         )
     ''')
     
@@ -27,7 +28,8 @@ def init_db():
         CREATE TABLE IF NOT EXISTS obligatory_expenses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             size REAL NOT NULL,
-            comment TEXT
+            comment TEXT,
+            month TEXT NOT NULL
         )
     ''')
     
@@ -35,14 +37,13 @@ def init_db():
         CREATE TABLE IF NOT EXISTS income_expenses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             size REAL NOT NULL,
-            comment TEXT
+            comment TEXT,
+            current_time TEXT NOT NULL,
+            month TEXT NOT NULL
         )
     ''')
     
     conn.close()
-
-with app.app_context():
-    init_db()
 
 # Главная страница с добавлением и удалением данных
 @app.route('/', methods=['GET', 'POST'])
@@ -110,4 +111,5 @@ def index():
     return render_template('index.html', salary=salary, obligatory_expenses=obligatory_expenses, income_expenses=income_expenses, month_data=month_data)
 
 if __name__ == '__main__':
+    init_db()  # Инициализация базы данных перед запуском приложения
     app.run(host='0.0.0.0')
