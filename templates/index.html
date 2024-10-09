@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Учет финансов</title>
 </head>
+<h2>Добавить запись</h2>
+<form action="/" method="post">
+    <label for="table">Выберите таблицу:</label>
+    <select name="table">
+        <option value="salary">Заработная плата</option>
+        <option value="obligatory_expenses">Обязательные расходы</option>
+        <option value="income_expenses">Приход/расход</option>
+    </select><br><br>
+    <label for="size">Размер:</label>
+    <input type="text" name="size" required><br><br>
+    <label for="comment">Комментарий:</label>
+    <input type="text" name="comment"><br><br>
+    <button type="submit">Добавить</button>
+</form>
 <body>
     <h1>Заработная плата</h1>
     <table border="1">
@@ -53,44 +67,5 @@
         </tr>
         {% endfor %}
     </table>
-
-    <h1>Приход/расход</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Размер</th>
-            <th>Комментарий</th>
-            <th>Действие</th>
-        </tr>
-        {% for row in income_expenses %}
-        <tr>
-            <td>{{ row.id }}</td>
-            <td>{{ row.size }}</td>
-            <td>{{ row.comment }}</td>
-            <td>
-                <form action="/" method="post" style="display:inline;">
-                    <input type="hidden" name="delete_table" value="income_expenses">
-                    <input type="hidden" name="delete_id" value="{{ row.id }}">
-                    <button type="submit">Удалить</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    <h2>Добавить запись</h2>
-    <form action="/" method="post">
-        <label for="table">Выберите таблицу:</label>
-        <select name="table">
-            <option value="salary">Заработная плата</option>
-            <option value="obligatory_expenses">Обязательные расходы</option>
-            <option value="income_expenses">Приход/расход</option>
-        </select><br><br>
-        <label for="size">Размер:</label>
-        <input type="text" name="size" required><br><br>
-        <label for="comment">Комментарий:</label>
-        <input type="text" name="comment"><br><br>
-        <button type="submit">Добавить</button>
-    </form>
 </body>
 </html>
