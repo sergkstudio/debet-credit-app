@@ -91,7 +91,6 @@ def index():
     salary1 = conn.execute('SELECT * FROM salary').fetchall()
     obligatory_expenses = conn.execute('SELECT * FROM obligatory_expenses').fetchall()
     income_expenses = conn.execute('SELECT * FROM income_expenses').fetchall()
-    conn.close()
 
     # Получение данных за каждый месяц
     salary = conn.execute('SELECT * FROM salary ORDER BY month').fetchall()
