@@ -3,8 +3,7 @@ FROM python:3.9-slim
 
 # Устанавливаем зависимости
 WORKDIR /app
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install flask
 
 # Копируем исходный код
 COPY . .
