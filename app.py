@@ -51,23 +51,8 @@ def init_db():
 with app.app_context():
     init_db()
 
-# Главная страница
-@app.route('/')
-def index():
-    conn = get_db_connection()
-    posts = conn.execute('SELECT * FROM posts').fetchall()
-    conn.close()
-    return render_template('index.html', posts=posts)
-
-@app.route('/<int:post_id>')
-def get_post(post_id):
-    conn = get_db_connection()
-    post = conn.execute('SELECT * FROM posts WHERE id = ?', (post_id,)).fetchone()
-    conn.close()
-    return render_template('post.html', post=post)
-
 # Страница для добавления новых данных
-@app.route('/new', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def new_entry():
     if request.method == 'POST':
         # Получаем данные из формы
@@ -88,7 +73,7 @@ def new_entry():
         conn.close()
         return redirect(url_for('index'))
 
-    return render_template('new.html')
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
