@@ -119,8 +119,6 @@ def index():
 
     for expense in income_expenses:
         expense_data[expense] = {
-            'salary_total': sum(row['size'] for row in salary),
-            'expense_total': sum(row['size'] for row in obligatory_expenses_month if row['month'] == month),
             'current_time': (row['current_time'] for row in income_expenses),
             'credit': (row['size'] for row in income_expenses),
             'comment': (row['comment'] for row in income_expenses)
@@ -129,7 +127,7 @@ def index():
     
     conn.close()
 
-    return render_template('index.html', month_data=month_data, expense_data=expense_data, salary=salary, income_expenses=income_expenses, obligatory_expenses=obligatory_expenses)
+    return render_template('index.html', month_data=month_data, expense_data=expense_data, salary=salary, income_expenses=income_expenses, obligatory_expenses=obligatory_expenses, salary_total=salary_total)
 if __name__ == '__main__':
     init_db()  # Инициализация базы данных перед запуском приложения
     app.run(host='0.0.0.0')
