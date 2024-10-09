@@ -106,7 +106,17 @@ def index():
 
     conn.close()
 
-    return render_template('index.html', month_data=month_data, salary=salary1, obligatory_expenses=obligatory_expenses, income_expenses=income_expenses)
+    operations = []
+
+    for row in income_expenses:
+        operations.append({
+            'month': row['month'],
+            'debit': row['size'],
+            'credit': 0,  # Пример для дебета/кредита
+            'comment': row['comment']
+        })
+
+    return render_template('index.html', month_data=month_data, salary=salary1, obligatory_expenses=obligatory_expenses, income_expenses=income_expenses, data={'operations': operations})
 if __name__ == '__main__':
     init_db()  # Инициализация базы данных перед запуском приложения
     app.run(host='0.0.0.0')
