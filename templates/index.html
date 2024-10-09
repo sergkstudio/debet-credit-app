@@ -24,7 +24,7 @@
         </tr>
         {% endfor %}
 
-        {% for data in expense_data.item() %}
+        {% for data in expense_data.items() %}
         <tr>
             <td>{{ data.current_time }}</td>
             <td>{{ data.salary_total - data.credit }}</td>
