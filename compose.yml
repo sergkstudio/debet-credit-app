@@ -6,8 +6,6 @@ services:
       - "5006:5000"
     volumes:
       - ./:/app
-    depends_on:
-      - redis
     networks:
       default:
         ipv4_address: 172.18.2.194
