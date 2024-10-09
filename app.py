@@ -105,9 +105,9 @@ def index():
     month_data = {}
     for month in months:
         month_data[month] = {
-            'salary_total': sum(row['size'] for row in salary if row['month'] == month),
-            'expense_total': sum(row['size'] for row in obligatory_expenses),
-            'operations': [row for row in income_expenses if row['month'] == month]
+            'salary_total': sum(row['size'] for row in salary),
+            'expense_total': sum(row['size'] for row in obligatory_expenses_month if row['month'] == month),
+            'operations': [row for row in income_expenses_month if row['month'] == month]
         }
 
     # Вычисляем общие суммы для зарплаты и расходов
@@ -119,10 +119,11 @@ def index():
 
     for row in expense_data:
         expense_data[income_expenses] = {
-            'salary_total': sum(row['size'] for row in obligatory_expenses),
-            'current_time': row['current_time'],
-            'credit': row['size'],
-            'comment': row['comment']
+            'salary_total': sum(row['size'] for row in salary),
+            'expense_total': sum(row['size'] for row in obligatory_expenses_month if row['month'] == month),
+            'current_time': (row['current_time'] for row in income_expenses),
+            'credit': (row['size'] for row in income_expenses),
+            'comment': (row['comment'] for row in income_expenses)
         }
 
     
