@@ -64,7 +64,11 @@ def index():
             conn.execute('INSERT INTO income_expenses (size, comment) VALUES (?, ?)', (size, comment))
         
         conn.commit()
-    
+        conn.close()
+
+        # Перенаправляем после POST-запроса
+        return redirect(url_for('index'))
+
     # Получаем записи из всех таблиц
     salary = conn.execute('SELECT * FROM salary').fetchall()
     obligatory_expenses = conn.execute('SELECT * FROM obligatory_expenses').fetchall()
