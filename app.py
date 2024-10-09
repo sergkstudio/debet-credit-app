@@ -120,7 +120,7 @@ def index():
         operations.append({
             'month': row['month'],
             'debit': row['size'],
-            'credit': 0,  # Пример для дебета/кредита
+            'credit': expense_total,
             'comment': row['comment']
         })
 
