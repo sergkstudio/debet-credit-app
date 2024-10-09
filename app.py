@@ -116,7 +116,7 @@ def index():
             'comment': row['comment']
         })
 
-    return render_template('index.html', month_data=month_data, salary=salary1, obligatory_expenses=obligatory_expenses, income_expenses=income_expenses, data={'operations': operations})
+    return render_template('index.html', month_data=month_data, salary=salary1, obligatory_expenses=obligatory_expenses, income_expenses=income_expenses, data={'operations': operations, 'salary_total': salary_total, 'expense_total': expense_total})
 if __name__ == '__main__':
     init_db()  # Инициализация базы данных перед запуском приложения
     app.run(host='0.0.0.0')
