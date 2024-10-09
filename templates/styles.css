@@ -1,0 +1,37 @@
+/* Контейнер для таблицы и формы */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Стиль для таблицы (слева) */
+.table-container {
+    width: 60%;  /* Занимает 60% ширины */
+}
+
+/* Стиль для формы (справа) */
+.form-container {
+    width: 35%;  /* Занимает 35% ширины */
+}
+
+/* Чтобы таблицы и форма выглядели аккуратно */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label, form input, form button, form select {
+    margin-bottom: 10px;
+}

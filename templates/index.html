@@ -4,125 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Учет финансов</title>
+    <!-- Подключение внешнего CSS-файла -->
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <h1>Заработная плата</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Размер</th>
-            <th>Комментарий</th>
-            <th>Действие</th>
-        </tr>
-        {% for row in salary %}
-        <tr>
-            <td>{{ row.id }}</td>
-            <td>{{ row.size }}</td>
-            <td>{{ row.comment }}</td>
-            <td>
-                <form action="/" method="post" style="display:inline;">
-                    <input type="hidden" name="delete_table" value="salary">
-                    <input type="hidden" name="delete_id" value="{{ row.id }}">
-                    <button type="submit">Удалить</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
 
-    <h1>Обязательные расходы</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Размер</th>
-            <th>Комментарий</th>
-            <th>Действие</th>
-        </tr>
-        {% for row in obligatory_expenses %}
-        <tr>
-            <td>{{ row.id }}</td>
-            <td>{{ row.size }}</td>
-            <td>{{ row.comment }}</td>
-            <td>
-                <form action="/" method="post" style="display:inline;">
-                    <input type="hidden" name="delete_table" value="obligatory_expenses">
-                    <input type="hidden" name="delete_id" value="{{ row.id }}">
-                    <button type="submit">Удалить</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="container">
+        <!-- Левая часть (Таблицы) -->
+        <div class="table-container">
 
-    <h1>Приход/расход</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Размер</th>
-            <th>Комментарий</th>
-            <th>Действие</th>
-        </tr>
-        {% for row in income_expenses %}
-        <tr>
-            <td>{{ row.id }}</td>
-            <td>{{ row.size }}</td>
-            <td>{{ row.comment }}</td>
-            <td>
-                <form action="/" method="post" style="display:inline;">
-                    <input type="hidden" name="delete_table" value="income_expenses">
-                    <input type="hidden" name="delete_id" value="{{ row.id }}">
-                    <button type="submit">Удалить</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+            <h1>Финансовые данные по месяцам</h1>
+            <table border="1">
+                <tr>
+                    <th>Месяц</th>
+                    <th>Дебет</th>
+                    <th>Кредит</th>
+                    <th>Комментарий</th>
+                </tr>
+                
+                {% for month, data in month_data.items() %}
+                <tr>
+                    <td>{{ month }}</td>
+                    <td>{{ data.salary_total }}</td>
+                    <td>{{ data.expense_total }}</td>
+                    <td>Обязательные расходы</td>
+                </tr>
+            
+                {% set current_debet = data.salary_total - data.expense_total %}
+                
+                {% for operation in data.operations %}
+                <tr>
+                    <td>{{ operation['current_time'] }}</td>
+                    <td>{{ current_debet - operation['size'] }}</td>  <!-- Дебет перед операцией -->
+                    <td>{{ operation['size'] }}</td>
+                    <td>{{ operation['comment'] }}</td>
+                </tr>
+                {% set current_debet = current_debet - operation['size'] | float %}  <!-- Обновляем дебет -->
+                {% endfor %}
+                
+                {% endfor %}
+            </table>  
+        </div>
+        <!-- Правая часть (Форма) -->
+        <div class="form-container">  
 
-    <h2>Добавить запись</h2>
-    <form action="/" method="post">
-        <label for="table">Выберите таблицу:</label>
-        <select name="table">
-            <option value="salary">Заработная плата</option>
-            <option value="obligatory_expenses">Обязательные расходы</option>
-            <option value="income_expenses">Приход/расход</option>
-        </select><br><br>
-        <label for="size">Размер:</label>
-        <input type="text" name="size" required><br><br>
-        <label for="comment">Комментарий:</label>
-        <input type="text" name="comment"><br><br>
-        <button type="submit">Добавить</button>
-    </form>
+            <h2>Добавить запись</h2>
+            <form action="/" method="post">
+                <label for="table">Выберите таблицу:</label>
+                <select name="table">
+                    <option value="salary">Заработная плата</option>
+                    <option value="obligatory_expenses">Обязательные расходы</option>
+                    <option value="income_expenses">Приход/расход</option>
+                </select><br><br>
+                <label for="size">Размер:</label>
+                <input type="text" name="size" required><br><br>
+                <label for="comment">Комментарий:</label>
+                <input type="text" name="comment"><br><br>
+                <button type="submit">Добавить</button>
+            </form>
 
-    <h1>Финансовые данные по месяцам</h1>
-    <table border="1">
-        <tr>
-            <th>Месяц</th>
-            <th>Дебет</th>
-            <th>Кредит</th>
-            <th>Комментарий</th>
-        </tr>
-        
-        {% for month, data in month_data.items() %}
-        <tr>
-            <td>{{ month }}</td>
-            <td>{{ data.salary_total }}</td>
-            <td>{{ data.expense_total }}</td>
-            <td>Обязательные расходы</td>
-        </tr>
-    
-        {% set current_debet = data.salary_total - data.expense_total %}
-        
-        {% for operation in data.operations %}
-        <tr>
-            <td>{{ operation['current_time'] }}</td>
-            <td>{{ current_debet - operation['size'] }}</td>  <!-- Дебет перед операцией -->
-            <td>{{ operation['size'] }}</td>
-            <td>{{ operation['comment'] }}</td>
-        </tr>
-        {% set current_debet = current_debet - operation['size'] | float %}  <!-- Обновляем дебет -->
-        {% endfor %}
-        
-        {% endfor %}
-    </table>
+            <h1>Заработная плата</h1>
+            <table border="1">
+                <tr>
+                    <th>ID</th>
+                    <th>Размер</th>
+                    <th>Комментарий</th>
+                    <th>Действие</th>
+                </tr>
+                {% for row in salary %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.size }}</td>
+                    <td>{{ row.comment }}</td>
+                    <td>
+                        <form action="/" method="post" style="display:inline;">
+                            <input type="hidden" name="delete_table" value="salary">
+                            <input type="hidden" name="delete_id" value="{{ row.id }}">
+                            <button type="submit">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <h1>Обязательные расходы</h1>
+            <table border="1">
+                <tr>
+                    <th>ID</th>
+                    <th>Размер</th>
+                    <th>Комментарий</th>
+                    <th>Действие</th>
+                </tr>
+                {% for row in obligatory_expenses %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.size }}</td>
+                    <td>{{ row.comment }}</td>
+                    <td>
+                        <form action="/" method="post" style="display:inline;">
+                            <input type="hidden" name="delete_table" value="obligatory_expenses">
+                            <input type="hidden" name="delete_id" value="{{ row.id }}">
+                            <button type="submit">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+    </div>
 </body>
 </html>
