@@ -119,9 +119,9 @@ def index():
 
     for expense in income_expenses:
         expense_data[expense] = {
-            'current_time': ['current_time'],
-            'credit': row['size'],
-            'comment': ['comment']
+            'current_time': [row['current_time'] for row in income_expenses],
+            'credit': [row['size'] for row in income_expenses],
+            'comment': [row['comment'] for row in income_expenses]
         }
 
     
