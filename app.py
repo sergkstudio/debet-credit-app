@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -34,7 +35,8 @@ def init_db():
         CREATE TABLE IF NOT EXISTS income_expenses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             size REAL NOT NULL,
-            comment TEXT
+            comment TEXT,
+            current_time TEXT NOT NULL
         )
     ''')
     
@@ -53,13 +55,14 @@ def index():
         table = request.form['table']
         size = request.form['size']
         comment = request.form['comment']
+        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # Текущая дата и время
         
         if table == 'salary':
             conn.execute('INSERT INTO salary (size, comment) VALUES (?, ?)', (size, comment))
         elif table == 'obligatory_expenses':
             conn.execute('INSERT INTO obligatory_expenses (size, comment) VALUES (?, ?)', (size, comment))
         elif table == 'income_expenses':
-            conn.execute('INSERT INTO income_expenses (size, comment) VALUES (?, ?)', (size, comment))
+            conn.execute('INSERT INTO income_expenses (size, comment, current_time) VALUES (?, ?)', (size, comment))
         
         conn.commit()
         conn.close()
