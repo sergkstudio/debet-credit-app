@@ -87,6 +87,12 @@ def index():
         conn.close()
         return redirect(url_for('index'))
 
+    # Получаем записи из всех таблиц
+    salary1 = conn.execute('SELECT * FROM salary').fetchall()
+    obligatory_expenses = conn.execute('SELECT * FROM obligatory_expenses').fetchall()
+    income_expenses = conn.execute('SELECT * FROM income_expenses').fetchall()
+    conn.close()
+
     # Получение данных за каждый месяц
     salary = conn.execute('SELECT * FROM salary ORDER BY month').fetchall()
     obligatory_expenses = conn.execute('SELECT * FROM obligatory_expenses ORDER BY month').fetchall()
@@ -105,7 +111,7 @@ def index():
 
     conn.close()
 
-    return render_template('index.html', month_data=month_data)
+    return render_template('index.html', month_data=month_data, salary=salary1, obligatory_expenses=obligatory_expenses, income_expenses=income_expenses)
 if __name__ == '__main__':
     init_db()  # Инициализация базы данных перед запуском приложения
     app.run(host='0.0.0.0')
