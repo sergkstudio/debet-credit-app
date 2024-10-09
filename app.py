@@ -118,7 +118,7 @@ def index():
 
     for row in salary_total:
         operations.append({
-            'month': row['month'],
+            'current_time': row['current_time'],
             'credit': row['size'],
             'comment': row['comment']
         })
