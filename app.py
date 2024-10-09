@@ -68,8 +68,6 @@ def index():
                          (size, comment, current_time, month))
         
         conn.commit()
-        conn.close()
-        return redirect(url_for('index'))
     
     # Удаление записи
     if request.method == 'POST' and 'delete_id' in request.form:
@@ -84,8 +82,6 @@ def index():
             conn.execute('DELETE FROM income_expenses WHERE id = ?', (delete_id,))
         
         conn.commit()
-        conn.close()
-        return redirect(url_for('index'))
 
     # Получаем записи из всех таблиц
     salary1 = conn.execute('SELECT * FROM salary').fetchall()
