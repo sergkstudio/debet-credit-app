@@ -118,8 +118,8 @@ def index():
     expense_data = {}
 
     for row in expense_data:
-        expense_data[salary] = {
-            'expense_total': sum(row['size'] for row in obligatory_expenses),
+        expense_data[income_expenses] = {
+            'salary_total': sum(row['size'] for row in obligatory_expenses),
             'current_time': row['current_time'],
             'credit': row['size'],
             'comment': row['comment']
