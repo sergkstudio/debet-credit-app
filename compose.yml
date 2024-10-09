@@ -4,6 +4,8 @@ services:
     build: .
     ports:
       - "5006:5000"
+    volumes:
+      - ./:/app
     depends_on:
       - redis
     networks:
@@ -12,7 +14,12 @@ services:
 
   redis:
     image: "redis:alpine"
-    command: redis-server --save 900 1
+    volumes:
+      - ./redis/data:/data
+      - ./redis:/usr/local/etc/redis
+    command:
+      - redis-server
+      - /usr/local/etc/redis/redis.conf
     networks:
       default:
         ipv4_address: 172.18.2.195
