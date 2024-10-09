@@ -29,6 +29,19 @@
             <td>{{ operation['size'] }}</td>
             <td>{{ operation['comment'] }}</td>
         </tr>
+        {% for row in salary %}
+        <tr>
+            <td>{{ row.id }}</td>
+            <td>{{ row.size }}</td>
+            <td>{{ row.comment }}</td>
+            <td>
+                <form action="/" method="post" style="display:inline;">
+                    <input type="hidden" name="delete_table" value="salary">
+                    <input type="hidden" name="delete_id" value="{{ row.id }}">
+                    <button type="submit">Удалить</button>
+                </form>
+            </td>
+        </tr>
         {% endfor %}
         {% endfor %}
     </table>
