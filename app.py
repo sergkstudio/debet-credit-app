@@ -30,9 +30,18 @@ with app.app_context():
 @app.route('/')
 def index():
     conn = get_db_connection()
+    conn.execute('INSERT INTO posts (title, content) VALUES ("Why I love Flask", "This is so cool!!!")')
+    conn.execute('INSERT INTO posts (title, content) VALUES ("Cats >> Dogs", "It was a joke because they are all so adorable.")')
     posts = conn.execute('SELECT * FROM posts').fetchall()
     conn.close()
     return render_template('index.html', posts=posts)
+
+@app.route('/<int:post_id>')
+def get_post(post_id):
+    conn = get_db_connection()
+    post = conn.execute('SELECT * FROM posts WHERE id = ?', (post_id,)).fetchone()
+    conn.close()
+    return render_template('post.html', post=post)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
