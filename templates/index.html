@@ -21,7 +21,7 @@
             <td>{{ data.expense_total }}</td>
             <td>Обязательные расходы</td>
         </tr>
-        
+        {% endfor %}
         {% for operation in data.operations %}
         <tr>
             <td>{{ operation['current_time'] }}</td>
@@ -29,6 +29,7 @@
             <td>{{ operation['size'] }}</td>
             <td>{{ operation['comment'] }}</td>
         </tr>
+        {% endfor %}
         {% for row in salary %}
         <tr>
             <td>{{ row.id }}</td>
