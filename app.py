@@ -45,6 +45,7 @@ def init_db():
     
     conn.close()
 
+@app.before_first_request
 def before_first_request():
     init_db()
 
