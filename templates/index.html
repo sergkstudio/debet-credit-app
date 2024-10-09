@@ -119,7 +119,7 @@
             <td>{{ operation['size'] }}</td>
             <td>{{ operation['comment'] }}</td>
         </tr>
-        {% set current_debet = current_debet - operation['size'] %}  <!-- Обновляем дебет -->
+        {% set current_debet = current_debet - operation['size'] | float %}  <!-- Обновляем дебет -->
         {% endfor %}
         
         {% endfor %}
