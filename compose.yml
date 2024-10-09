@@ -11,18 +11,6 @@ services:
     networks:
       default:
         ipv4_address: 172.18.2.194
-
-  redis:
-    image: "redis:alpine"
-    volumes:
-      - ./redis/data:/data
-      - ./redis:/usr/local/etc/redis
-    command:
-      - redis-server
-      - /usr/local/etc/redis/redis.conf
-    networks:
-      default:
-        ipv4_address: 172.18.2.195
 networks:
   default:
     ipam:
