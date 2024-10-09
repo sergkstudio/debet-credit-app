@@ -116,7 +116,7 @@ def index():
     # Подготовка данных для передачи в шаблон
     operations = []
 
-    for row in income_expenses:
+    for row in salary_total:
         operations.append({
             'month': row['month'],
             'debit': row['size'],
