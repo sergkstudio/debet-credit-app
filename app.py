@@ -13,7 +13,7 @@ def get_db_connection():
 def init_db():
     conn = get_db_connection()
     
-    # Создаем таблицу для заработной платы
+    # Создаем таблицы
     conn.execute('''
         CREATE TABLE IF NOT EXISTS salary (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,7 +22,6 @@ def init_db():
         )
     ''')
     
-    # Создаем таблицу для обязательных расходов
     conn.execute('''
         CREATE TABLE IF NOT EXISTS obligatory_expenses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,8 +29,7 @@ def init_db():
             comment TEXT
         )
     ''')
-
-    # Создаем таблицу для прихода/расхода
+    
     conn.execute('''
         CREATE TABLE IF NOT EXISTS income_expenses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,13 +43,13 @@ def init_db():
 with app.app_context():
     init_db()
 
-# Главная страница с добавлением данных и отображением таблиц
+# Главная страница с добавлением и удалением данных
 @app.route('/', methods=['GET', 'POST'])
 def index():
     conn = get_db_connection()
     
-    # Если запрос POST, обрабатываем добавление записи
-    if request.method == 'POST':
+    # Добавление записи
+    if request.method == 'POST' and 'table' in request.form:
         table = request.form['table']
         size = request.form['size']
         comment = request.form['comment']
@@ -65,10 +63,8 @@ def index():
         
         conn.commit()
         conn.close()
-
-        # Перенаправляем после POST-запроса
         return redirect(url_for('index'))
-
+    
     # Удаление записи
     if request.method == 'POST' and 'delete_id' in request.form:
         table = request.form['delete_table']
@@ -85,7 +81,7 @@ def index():
         conn.close()
         return redirect(url_for('index'))
 
-    # Получаем записи из всех таблиц
+    # Получение записей из всех таблиц
     salary = conn.execute('SELECT * FROM salary').fetchall()
     obligatory_expenses = conn.execute('SELECT * FROM obligatory_expenses').fetchall()
     income_expenses = conn.execute('SELECT * FROM income_expenses').fetchall()
