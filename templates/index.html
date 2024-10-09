@@ -34,7 +34,6 @@
                 {% set current_debet = data.salary_total - data.expense_total %}
                 
                 {% for operation in data.operations %}
-                {% for row in income_expenses %}
                 <tr>
                     <td>{{ operation['current_time'] }}</td>
                     <td>{{ current_debet - operation['size'] }}</td>  <!-- Дебет перед операцией -->
@@ -43,7 +42,7 @@
                     <td>
                         <form action="/" method="post" style="display:inline;">
                             <input type="hidden" name="delete_table" value="income_expenses">
-                            <input type="hidden" name="delete_id" value="{{ row.id }}">
+                            <input type="hidden" name="delete_id" value="{{ operation.id }}">
                             <button type="submit">Удалить</button>
                         </form>
                     </td>
