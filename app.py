@@ -123,12 +123,12 @@ def index():
             'current_time': row['current_time'],
             'credit': row['size'],
             'comment': row['comment']
-        })
+        }
 
     
     conn.close()
 
-    return render_template('index.html', month_data=month_data, expense_data=expense_data)
+    return render_template('index.html', month_data=month_data, expense_data=expense_data, salary=salary, income_expenses=income_expenses, obligatory_expenses=obligatory_expenses)
 if __name__ == '__main__':
     init_db()  # Инициализация базы данных перед запуском приложения
     app.run(host='0.0.0.0')
