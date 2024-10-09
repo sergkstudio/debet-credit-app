@@ -32,7 +32,7 @@
             
                 {% set current_debet = data.salary_total - data.expense_total %}
                 
-                {% for operation in data.operations, row in salary %}
+                {% for operation in data.operations, for row in salary %}
                 <tr>
                     <td>{{ operation['current_time'] }}</td>
                     <td>{{ current_debet - operation['size'] }}</td>  <!-- Дебет перед операцией -->
