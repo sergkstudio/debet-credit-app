@@ -62,7 +62,7 @@ def index():
         elif table == 'obligatory_expenses':
             conn.execute('INSERT INTO obligatory_expenses (size, comment) VALUES (?, ?)', (size, comment))
         elif table == 'income_expenses':
-            conn.execute('INSERT INTO income_expenses (size, comment, current_time) VALUES (?, ?)', (size, comment))
+            conn.execute('INSERT INTO income_expenses (size, comment, current_time) VALUES (?, ?, ?)', (size, comment, current_time))
         
         conn.commit()
         conn.close()
