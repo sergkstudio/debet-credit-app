@@ -19,7 +19,32 @@ def close_db_connection(conn):
 # Инициализация БД
 def init_db():
     conn = get_db_connection()
-    conn.execute('CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, content TEXT NOT NULL)')
+    # Создаем таблицу для заработной платы
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS salary (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            size REAL NOT NULL,
+            comment TEXT
+        )
+    ''')
+    
+    # Создаем таблицу для обязательных расходов
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS obligatory_expenses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            size REAL NOT NULL,
+            comment TEXT
+        )
+    ''')
+
+    # Создаем таблицу для прихода/расхода
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS income_expenses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            size REAL NOT NULL,
+            comment TEXT
+        )
+    ''')
     conn.close()
 
 # Инициализация БД при старте приложения
@@ -41,20 +66,29 @@ def get_post(post_id):
     conn.close()
     return render_template('post.html', post=post)
 
+# Страница для добавления новых данных
 @app.route('/new', methods=['GET', 'POST'])
-def new_post():
+def new_entry():
     if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
+        # Получаем данные из формы
+        table = request.form['table']
+        size = request.form['size']
+        comment = request.form['comment']
 
+        # Вставляем данные в нужную таблицу
         conn = get_db_connection()
-        conn.execute('INSERT INTO posts (title, content) VALUES (?, ?)', (title, content))
+        if table == 'salary':
+            conn.execute('INSERT INTO salary (size, comment) VALUES (?, ?)', (size, comment))
+        elif table == 'obligatory_expenses':
+            conn.execute('INSERT INTO obligatory_expenses (size, comment) VALUES (?, ?)')
+        elif table == 'income_expenses':
+            conn.execute('INSERT INTO income_expenses (size, comment) VALUES (?, ?)')
+        
         conn.commit()
         conn.close()
-
         return redirect(url_for('index'))
 
-    return render_template('add_post.html')
+    return render_template('new.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
