@@ -45,10 +45,6 @@ def init_db():
     
     conn.close()
 
-@app.before_first_request
-def before_first_request():
-    init_db()
-
 # Главная страница с добавлением и удалением данных
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -111,4 +107,5 @@ def index():
 
     return render_template('index.html', month_data=month_data)
 if __name__ == '__main__':
+    init_db()  # Инициализация базы данных перед запуском приложения
     app.run(host='0.0.0.0')
