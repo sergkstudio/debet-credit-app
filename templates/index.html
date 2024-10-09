@@ -8,7 +8,7 @@
 <h1>Финансовые данные по месяцам</h1>
     <table border="1">
         <tr>
-            <th>Месяц</th>
+            <th>Дата</th>
             <th>Дебет</th>
             <th>Кредит</th>
             <th>Комментарий</th>
@@ -23,14 +23,16 @@
             <td>Обязательные расходы</td>
         </tr>
         {% endfor %}
-        {% for operation in data.operations %}
+
+        {% for salary, data in expense_data.items() %}
         <tr>
-            <td>{{ operation['current_time'] }}</td>
-            <td>{{ data.salary_total - data.expense_total }}</td>
-            <td>{{ operation['size'] }}</td>
-            <td>{{ operation['comment'] }}</td>
+            <td>{{ data.current_time }}</td>
+            <td>{{ data.salary_total - data.credit }}</td>
+            <td>{{ data.credit }}</td>
+            <td>Обязательные расходы</td>
         </tr>
         {% endfor %}
+
         {% for row in salary %}
         <tr>
             <td>{{ row.id }}</td>

@@ -85,19 +85,22 @@ def index():
             conn.execute('DELETE FROM income_expenses WHERE id = ?', (delete_id,))
         
         conn.commit()
+        conn.close()
+        # Перенаправляем после POST-запроса
+        return redirect(url_for('index'))
 
     # Получаем записи из всех таблиц
-    salary1 = conn.execute('SELECT * FROM salary').fetchall()
+    salary = conn.execute('SELECT * FROM salary').fetchall()
     obligatory_expenses = conn.execute('SELECT * FROM obligatory_expenses').fetchall()
     income_expenses = conn.execute('SELECT * FROM income_expenses').fetchall()
 
     # Получение данных за каждый месяц
-    salary = conn.execute('SELECT * FROM salary ORDER BY month').fetchall()
-    obligatory_expenses = conn.execute('SELECT * FROM obligatory_expenses ORDER BY month').fetchall()
-    income_expenses = conn.execute('SELECT * FROM income_expenses ORDER BY month').fetchall()
+    salary_month = conn.execute('SELECT * FROM salary ORDER BY month').fetchall()
+    obligatory_expenses_month = conn.execute('SELECT * FROM obligatory_expenses ORDER BY month').fetchall()
+    income_expenses_month = conn.execute('SELECT * FROM income_expenses ORDER BY month').fetchall()
 
     # Группируем данные по месяцам
-    months = list(set([row['month'] for row in salary + obligatory_expenses + income_expenses]))
+    months = list(set([row['month'] for row in salary_month + obligatory_expenses_month + income_expenses_month]))
     
     month_data = {}
     for month in months:
@@ -107,23 +110,25 @@ def index():
             'operations': [row for row in income_expenses if row['month'] == month]
         }
 
-    conn.close()
-
     # Вычисляем общие суммы для зарплаты и расходов
     salary_total = sum([row['size'] for row in salary])
     expense_total = sum([row['size'] for row in obligatory_expenses])
    
     # Подготовка данных для передачи в шаблон
-    operations = []
+    expense_data = {}
 
-    for row in salary_total:
-        operations.append({
+    for row in expense_data:
+        expense_data[salary] = {
+            'expense_total': sum(row['size'] for row in obligatory_expenses),
             'current_time': row['current_time'],
             'credit': row['size'],
             'comment': row['comment']
         })
 
-    return render_template('index.html', month_data=month_data, salary=salary1, obligatory_expenses=obligatory_expenses, income_expenses=income_expenses, data={'operations': operations, 'salary_total': salary_total, 'expense_total': expense_total})
+    
+    conn.close()
+
+    return render_template('index.html', month_data=month_data, expense_data=expense_data)
 if __name__ == '__main__':
     init_db()  # Инициализация базы данных перед запуском приложения
     app.run(host='0.0.0.0')
