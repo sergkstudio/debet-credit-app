@@ -115,7 +115,7 @@
         {% for operation in data.operations %}
         <tr>
             <td>{{ operation['current_time'] }}</td>
-            <td>{{ current_debet }}</td>  <!-- Дебет перед операцией -->
+            <td>{{ current_debet - operation['size'] }}</td>  <!-- Дебет перед операцией -->
             <td>{{ operation['size'] }}</td>
             <td>{{ operation['comment'] }}</td>
         </tr>
