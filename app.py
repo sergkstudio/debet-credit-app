@@ -68,6 +68,9 @@ def index():
                          (size, comment, current_time, month))
         
         conn.commit()
+        conn.close()
+        # Перенаправляем после POST-запроса
+        return redirect(url_for('index'))
     
     # Удаление записи
     if request.method == 'POST' and 'delete_id' in request.form:
