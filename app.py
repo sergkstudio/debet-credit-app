@@ -117,7 +117,7 @@ def index():
     # Подготовка данных для передачи в шаблон
     expense_data = {}
 
-    for expense in expense_data:
+    for expense in income_expenses:
         expense_data[expense] = {
             'salary_total': sum(row['size'] for row in salary),
             'expense_total': sum(row['size'] for row in obligatory_expenses_month if row['month'] == month),
