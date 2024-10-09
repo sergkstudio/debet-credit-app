@@ -106,6 +106,11 @@ def index():
 
     conn.close()
 
+    # Вычисляем общие суммы для зарплаты и расходов
+    salary_total = sum([row['size'] for row in salary])
+    expense_total = sum([row['size'] for row in obligatory_expenses])
+   
+    # Подготовка данных для передачи в шаблон
     operations = []
 
     for row in income_expenses:
