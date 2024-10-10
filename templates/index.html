@@ -48,7 +48,7 @@
                     </td>
                 </tr>
                 <!-- Обновляем дебет -->
-                
+                {% set current_debet = current_debet - operation['size'] | float %}
                 {% endfor %}
                 {% endfor %}
             </table>  
