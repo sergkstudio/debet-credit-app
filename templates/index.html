@@ -36,7 +36,8 @@
                 {% set current_debet = init_debet - operation['size'] | float %}
                 <tr>
                     <td>{{ operation['current_time'] }}</td>
-                    <td>{{ current_debet | float }}</td>  <!-- Дебет перед операцией -->
+                    <td>{{ current_debet | float }}</td>
+                    {% set current_debet = current_debet - operation['size'] | float %}  <!-- Дебет перед операцией -->
                     <td>{{ operation['size'] }}</td>
                     <td>{{ operation['comment'] }}</td>
                     <td>
@@ -48,7 +49,7 @@
                     </td>
                 </tr>
                 <!-- Обновляем дебет -->
-                {% set current_debet = current_debet - operation['size'] | float %}
+                
                 {% endfor %}
                 {% endfor %}
             </table>  
