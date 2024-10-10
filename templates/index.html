@@ -31,9 +31,8 @@
                     <td>Обязательные расходы</td>
                 </tr>
             
-                {% set current_debet = current_debet - operation['size'] | float %}
-                
                 {% for operation in data.operations %}
+                {% set current_debet = current_debet - operation['size'] | float %}
                 <tr>
                     <td>{{ operation['current_time'] }}</td>
                     <td>{{ current_debet | float }}</td>  <!-- Дебет перед операцией -->
