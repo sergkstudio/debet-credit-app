@@ -32,11 +32,11 @@
                 </tr>
             
                 {% for operation in data.operations %}
-                {% set current_debet = data.salary_total - data.expense_total %}
-                {% set current_debet = current_debet - operation['size'] | float %}
+                {% set init_debet = data.salary_total - data.expense_total %}
+                {% set current_debet = init_debet - operation['size'] | float %}
                 <tr>
                     <td>{{ operation['current_time'] }}</td>
-                    <td>{{ current_debet - operation['size'] | float }}</td>  <!-- Дебет перед операцией -->
+                    <td>{{ current_debet | float }}</td>  <!-- Дебет перед операцией -->
                     <td>{{ operation['size'] }}</td>
                     <td>{{ operation['comment'] }}</td>
                     <td>
