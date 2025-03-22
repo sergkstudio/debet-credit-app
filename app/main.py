@@ -32,6 +32,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    is_admin: bool = False
 
 class User(UserBase):
     id: int
@@ -105,6 +106,42 @@ async def root(request: Request):
 async def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
+@app.get("/register", response_class=HTMLResponse)
+async def register_page(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+@app.post("/register")
+async def register(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(database.get_db)
+):
+    # Проверяем, существует ли пользователь
+    db_user = db.query(models.User).filter(models.User.email == email).first()
+    if db_user:
+        return templates.TemplateResponse(
+            "register.html",
+            {
+                "request": request,
+                "error": "Пользователь с таким email уже существует"
+            }
+        )
+    
+    # Создаем нового пользователя
+    hashed_password = get_password_hash(password)
+    db_user = models.User(
+        email=email,
+        hashed_password=hashed_password,
+        is_active=True,
+        is_admin=False
+    )
+    db.add(db_user)
+    db.commit()
+    
+    # Перенаправляем на страницу входа
+    return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+
 @app.post("/login")
 async def login(
     request: Request,
@@ -125,6 +162,12 @@ async def login(
     access_token = create_access_token(data={"sub": user.email})
     response = RedirectResponse(url="/profile", status_code=status.HTTP_302_FOUND)
     response.set_cookie(key="access_token", value=access_token)
+    return response
+
+@app.get("/logout")
+async def logout():
+    response = RedirectResponse(url="/login")
+    response.delete_cookie(key="access_token")
     return response
 
 @app.get("/profile", response_class=HTMLResponse)
@@ -199,7 +242,12 @@ def create_user(user: UserCreate, db: Session = Depends(database.get_db)):
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     hashed_password = get_password_hash(user.password)
-    db_user = models.User(email=user.email, hashed_password=hashed_password)
+    db_user = models.User(
+        email=user.email,
+        hashed_password=hashed_password,
+        is_active=True,
+        is_admin=user.is_admin
+    )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
