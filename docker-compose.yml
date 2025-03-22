@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://vpn_user:vpn_password@db:5432/vpn_billing
+      - SECRET_KEY=your-secret-key-here
+      - NETBIRD_API_KEY=your-netbird-api-key-here
+      - NETBIRD_API_URL=https://api.netbird.io/api/v1
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    networks:
+      - vpn-network
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=vpn_user
+      - POSTGRES_PASSWORD=vpn_password
+      - POSTGRES_DB=vpn_billing
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - vpn-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - vpn-network
+
+volumes:
+  postgres_data:
+
+networks:
+  vpn-network:
+    driver: bridge 

@@ -1,12 +1,23 @@
-# Используем базовый образ с Python
-FROM python:3.9-slim
+FROM python:3.11-slim
 
-# Устанавливаем зависимости
 WORKDIR /app
-RUN pip install flask
 
-# Копируем исходный код
+# Установка системных зависимостей
+RUN apt-get update && apt-get install -y \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Копирование файлов зависимостей
+COPY requirements.txt .
+
+# Установка зависимостей Python
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копирование исходного кода
 COPY . .
 
-# Запуск приложения
-CMD ["python", "app.py"]
+# Создание необходимых директорий
+RUN mkdir -p app/static/css app/static/js app/templates
+
+# Применение миграций и запуск приложения
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"] 

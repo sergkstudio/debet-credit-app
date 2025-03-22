@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Личный кабинет - VPN Billing System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>Профиль</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Статус:</strong> 
+                    {% if user.is_active %}
+                    <span class="badge bg-success">Активен</span>
+                    {% else %}
+                    <span class="badge bg-danger">Неактивен</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>Мои подписки</h4>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newSubscriptionModal">
+                    Новая подписка
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Статус</th>
+                                <th>Начало</th>
+                                <th>Конец</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for subscription in subscriptions %}
+                            <tr>
+                                <td>{{ subscription.id }}</td>
+                                <td>
+                                    {% if subscription.status == 'active' %}
+                                    <span class="badge bg-success">Активна</span>
+                                    {% elif subscription.status == 'expired' %}
+                                    <span class="badge bg-danger">Истекла</span>
+                                    {% else %}
+                                    <span class="badge bg-warning">Заблокирована</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ subscription.start_date.strftime('%d.%m.%Y') }}</td>
+                                <td>{{ subscription.end_date.strftime('%d.%m.%Y') }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" onclick="showSubscriptionDetails({{ subscription.id }})">
+                                        Подробнее
+                                    </button>
+                                    {% if subscription.status == 'active' %}
+                                    <button class="btn btn-sm btn-warning" onclick="extendSubscription({{ subscription.id }})">
+                                        Продлить
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для новой подписки -->
+<div class="modal fade" id="newSubscriptionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Новая подписка</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newSubscriptionForm" method="POST" action="/subscriptions/new">
+                    <div class="mb-3">
+                        <label class="form-label">Период подписки</label>
+                        <select class="form-select" name="period" required>
+                            <option value="1">1 месяц</option>
+                            <option value="3">3 месяца</option>
+                            <option value="6">6 месяцев</option>
+                            <option value="12">12 месяцев</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Способ оплаты</label>
+                        <select class="form-select" name="payment_method" required>
+                            <option value="card">Банковская карта</option>
+                            <option value="crypto">Криптовалюта</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="submit" form="newSubscriptionForm" class="btn btn-primary">Оформить подписку</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
